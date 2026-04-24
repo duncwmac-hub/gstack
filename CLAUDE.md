@@ -683,3 +683,46 @@ The active skill lives at `~/.claude/skills/gstack/`. After making changes:
 Or copy the binaries directly:
 - `cp browse/dist/browse ~/.claude/skills/gstack/browse/dist/browse`
 - `cp design/dist/design ~/.claude/skills/gstack/design/dist/design`
+
+## gstack
+
+Use the `/browse` skill from gstack for ALL web browsing (navigating pages,
+interacting with elements, taking screenshots, QA, dogfooding, verifying
+deployments). NEVER use `mcp__claude-in-chrome__*` tools — they are slow,
+unreliable, and not what this project uses.
+
+Available gstack skills:
+
+- `/office-hours` — YC Office Hours: startup diagnostic + builder brainstorm
+- `/plan-ceo-review` — CEO-perspective review of a plan
+- `/plan-eng-review` — engineering-perspective review of a plan
+- `/plan-design-review` — design-perspective review of a plan
+- `/plan-devex-review` — developer-experience review of a plan
+- `/design-consultation` — design system from scratch
+- `/design-shotgun` — visual design exploration
+- `/design-html` — HTML/CSS design generation
+- `/design-review` — design audit + fix loop
+- `/devex-review` — developer-experience audit
+- `/review` — review a pull request
+- `/ship` — ship workflow (version, changelog, PR)
+- `/land-and-deploy` — merge → deploy → canary verify
+- `/canary` — post-deploy monitoring loop
+- `/benchmark` — performance regression detection
+- `/browse` — fast headless browser for QA + dogfooding
+- `/connect-chrome` — launch GStack Browser (alias for open-gstack-browser)
+- `/qa` — full QA pass with fixes
+- `/qa-only` — report-only QA, no fixes
+- `/setup-browser-cookies` — one-time cookie auth setup
+- `/setup-deploy` — one-time deploy config
+- `/retro` — retrospective on the current session/branch
+- `/investigate` — systematic root-cause debugging
+- `/document-release` — post-ship doc updates
+- `/codex` — multi-AI second opinion via OpenAI Codex CLI
+- `/cso` — OWASP Top 10 + STRIDE security audit
+- `/autoplan` — auto-review pipeline (CEO → design → eng)
+- `/careful` — extra-careful change mode
+- `/freeze` — freeze the current state
+- `/guard` — guardrail enforcement
+- `/unfreeze` — unfreeze a frozen state
+- `/gstack-upgrade` — pull latest gstack + run migrations
+- `/learn` — learn from session and persist to memory
