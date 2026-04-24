@@ -327,7 +327,7 @@ if ! ensure_playwright_browser; then
   (
     cd "$SOURCE_GSTACK_DIR"
     bunx playwright install chromium
-  )
+  ) || true  # don't abort setup if download fails (sandboxed/offline envs); warning is emitted below
 
   if [ "$IS_WINDOWS" -eq 1 ]; then
     # On Windows, Node.js launches Chromium (not Bun — see oven-sh/bun#4253).
@@ -350,15 +350,20 @@ if ! ensure_playwright_browser; then
   fi
 fi
 
+BROWSE_READY=1
 if ! ensure_playwright_browser; then
+  BROWSE_READY=0
+  echo "" >&2
+  echo "⚠  Playwright Chromium is not usable — /browse will not work until this is fixed." >&2
   if [ "$IS_WINDOWS" -eq 1 ]; then
-    echo "gstack setup failed: Playwright Chromium could not be launched via Node.js" >&2
-    echo "  This is a known issue with Bun on Windows (oven-sh/bun#4253)." >&2
-    echo "  Ensure Node.js is installed and 'node -e \"require('playwright')\"' works." >&2
+    echo "   Known Bun-on-Windows issue (oven-sh/bun#4253). Install Node.js and verify:" >&2
+    echo "     node -e \"require('playwright')\"" >&2
   else
-    echo "gstack setup failed: Playwright Chromium could not be launched" >&2
+    echo "   Usually a network/allowlist issue blocking cdn.playwright.dev. Retry with:" >&2
+    echo "     cd $SOURCE_GSTACK_DIR && bunx playwright install chromium" >&2
   fi
-  exit 1
+  echo "   Every other gstack skill (/review, /ship, /retro, /investigate, ...) still works." >&2
+  echo "" >&2
 fi
 
 # 3. Ensure ~/.gstack global state directory exists
@@ -1008,4 +1013,28 @@ if [ "$NO_TEAM_MODE" -eq 1 ]; then
   fi
 
   log "Team mode disabled: auto-update hook removed."
+fi
+
+# 11. Final status banner — what just got installed, what to try next
+if [ "$QUIET" -eq 0 ]; then
+  echo ""
+  echo "─────────────────────────────────────────────────────────────"
+  echo "  gstack installed."
+  echo "─────────────────────────────────────────────────────────────"
+  if [ "${BROWSE_READY:-1}" -eq 1 ]; then
+    echo "  ✓ all skills ready, including /browse"
+  else
+    echo "  ✓ skills ready"
+    echo "  ⚠ /browse needs Chromium — see warning above"
+  fi
+  echo ""
+  echo "  Try one of these in a Claude Code session:"
+  echo "    /review        — review a PR"
+  echo "    /ship          — version + changelog + open PR"
+  echo "    /retro         — retro the current branch"
+  echo "    /investigate   — root-cause a bug"
+  echo "    /browse        — headless browser for QA"
+  echo ""
+  echo "  Full list: see ~/.claude/skills/gstack/README.md"
+  echo "─────────────────────────────────────────────────────────────"
 fi
